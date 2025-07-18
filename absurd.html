@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lo Butuh Ngide? - by @nayazx28</title>
+  <style>
+    body {
+      background: #0f0f0f;
+      color: #fff;
+      font-family: 'Comic Neue', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    button {
+      margin: 0.3rem;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 12px;
+      background-color: #ff5e57;
+      color: white;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s ease-in-out;
+    }
+    button:hover {
+      transform: scale(1.1);
+    }
+    #result, #response {
+      margin-top: 1rem;
+      text-align: center;
+      font-size: 1.1rem;
+      max-width: 500px;
+    }
+    input[type="text"] {
+      margin-top: 1rem;
+      padding: 0.5rem;
+      width: 80%;
+      border-radius: 10px;
+      border: none;
+    }
+    footer {
+      position: absolute;
+      bottom: 10px;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+    #leaderboard, #submitArea {
+      margin-top: 2rem;
+      width: 80%;
+      max-width: 600px;
+    }
+    textarea {
+      width: 100%;
+      height: 60px;
+      padding: 0.5rem;
+      border-radius: 10px;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Lo Butuh Ngide? 🤯</h1>
+  <div>
+    <button onclick="generate('ngide')">Ngide</button>
+    <button onclick="generate('healing')">Healing</button>
+    <button onclick="generate('chaos')">Serahkan ke Semesta</button>
+    <button onclick="generateDarkJoke()">Mode Jokes Dark</button>
+  </div>
+
+  <div id="result"></div>
+  <input type="text" id="userInput" placeholder="Ketik tanggapan lo di sini..." />
+  <div id="response"></div>
+
+  <div id="leaderboard">
+    <h3>🔥 Leaderboard Komentar Absurd</h3>
+    <ol id="board"></ol>
+  </div>
+
+  <div id="submitArea">
+    <h4>🌀 Kirim Tambahan Kekacauan:</h4>
+    <textarea id="newQuote" placeholder="Tulis kata kata random lo... bisa dark, bisa absurd, bisa ngawur. Tambahan lo bakal masuk ke tombol 'Serahkan ke Semesta'."></textarea>
+    <button onclick="submitQuote()">Tambah ke Kekacauan</button>
+  </div>
+
+  <footer>Website absurd by @nayazx28</footer>
+
+  <script>
+    const absurdReplies = {
+      ngide: [
+        "Coba pikirin ulang kenapa kucing belum bisa main Mobile Legends...",
+        "Ide gila: Es teh tarik rasa rendang. Kenapa nggak?",
+        "Bisakah kita tidur sambil jogging? Ilmuwan masih bingung.",
+        "Mimpi adalah rencana yang nunggu kuota."
+      ],
+      healing: [
+        "Tarik napas... buang mantan...",
+        "Ingat, nasi padang selalu ada buat lo.",
+        "Langit memang mendung, tapi hati lo jangan.",
+        "Lo butuh peluk... dari saldo GoPay yang masuk."
+      ],
+      chaos: [
+        "Kalau semut bisa nge-gym, lo gak ada alasan rebahan terus.",
+        "Jangan takut gagal. Takutlah pas bangun tidur udah Senin.",
+        "Lo cuma butuh satu: WiFi lancar dan hidup absurd.",
+        "Kadang chaos itu solusi. Kayak mie goreng pake cokelat."
+      ]
+    };
+
+    const darkJokes = [
+      "Lo bukan gagal, cuma belum cocok sama keberhasilan.",
+      "Jangan sedih... hidup orang lain juga berantakan kok.",
+      "Senyum itu ibadah, makanya gue jarang senyum.",
+      "Kamu kuat kok... kayak kopi tanpa gula dan harapan.",
+      "Gagal itu biasa, bangkit itu... nanti aja lah capek.",
+      "Lo tuh spesial. Kayak error yang gak bisa direproduce tapi selalu muncul di live.",
+      "Kalau hidup lo film, pasti genre-nya tragikomedi dokumenter.",
+      "Kadang gue iri sama batu... dia keras, lo lemah.",
+      "Lo bilang hidup lo berat? Coba jadi dompet gue.",
+      "Hidupmu itu dark... saking dark-nya, Google pun nggak bisa index.",
+      "Hidup lo sial? Santai, bahkan kertas pun kadang nusuk jari.",
+      "Jangan terlalu berharap... bahkan air galon aja suka abis pas lo butuh."
+    ];
+
+    let userLeaderboard = JSON.parse(localStorage.getItem('absurdLeaderboard') || '[]');
+
+    const aiResponses = Array.from({length: 99999}, (_, i) => `💬 Respon #${i+1}: ${pickRandomAbsurdLine()}`);
+
+    function pickRandomAbsurdLine() {
+      const pools = absurdReplies.ngide.concat(absurdReplies.healing, absurdReplies.chaos, darkJokes);
+      return pools[Math.floor(Math.random() * pools.length)];
+    }
+
+    function generate(mode) {
+      const pick = absurdReplies[mode][Math.floor(Math.random() * absurdReplies[mode].length)];
+      document.getElementById('result').innerText = pick;
+      document.getElementById('response').innerText = "";
+      document.getElementById('userInput').value = "";
+    }
+
+    function generateDarkJoke() {
+      const pick = darkJokes[Math.floor(Math.random() * darkJokes.length)];
+      document.getElementById('result').innerText = pick;
+      document.getElementById('response').innerText = "";
+      document.getElementById('userInput').value = "";
+    }
+
+    document.getElementById('userInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        const input = this.value.trim();
+        if (input.length > 0) {
+          const res = aiResponses[Math.floor(Math.random() * aiResponses.length)];
+          document.getElementById('response').innerText = res;
+          userLeaderboard.push(input);
+          updateLeaderboard();
+          localStorage.setItem('absurdLeaderboard', JSON.stringify(userLeaderboard));
+          this.value = "";
+        }
+      }
+    });
+
+    function updateLeaderboard() {
+      const board = document.getElementById('board');
+      board.innerHTML = "";
+      userLeaderboard.slice(-5).reverse().forEach((text, i) => {
+        const li = document.createElement('li');
+        li.innerText = text;
+        board.appendChild(li);
+      });
+    }
+
+    function submitQuote() {
+      const quote = document.getElementById('newQuote').value.trim();
+      if (quote.length > 0) {
+        absurdReplies.chaos.push(quote);
+        document.getElementById('newQuote').value = "";
+        document.getElementById('result').innerText = `🔥 Quote absurd lo ditambahin: "${quote}"`; 
+        alert('Nice. Absurd lo udah nyampur sama kekacauan semesta 😎');
+      }
+    }
+
+    updateLeaderboard();
+  </script>
+</body>
+</html>
